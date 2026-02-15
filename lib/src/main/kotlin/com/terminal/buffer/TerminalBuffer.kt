@@ -54,4 +54,29 @@ class TerminalBuffer(
         }
         cursor.column = (cursor.column + n).coerceIn(0, width-1)
     }
+
+    fun setForeground(color: Color) {
+        currentAttributes = currentAttributes.copy(foreground = color)
+    }
+
+    fun setBackground(color: Color) {
+        currentAttributes = currentAttributes.copy(background = color)
+    }
+
+    fun setStyle(bold: Boolean?, italic: Boolean?, underline: Boolean?) {
+        val currentStyles = currentAttributes.styleFlags
+        currentAttributes = currentAttributes.copy(styleFlags = currentStyles.copy(
+            bold = bold ?: currentStyles.bold,
+            italic = italic ?: currentStyles.italic,
+            underline = underline ?: currentStyles.underline,
+        ))
+    }
+
+    fun resetAttributes() {
+        currentAttributes = CellAttributes()
+    }
+
+    fun getCurrentAttributes(): CellAttributes {
+        return currentAttributes
+    }
 }

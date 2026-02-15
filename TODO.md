@@ -98,7 +98,7 @@ TerminalBuffer.kt - Main class
 
 ## Phase 7: Attributes
 
-- [ ] **7.1** Attributes management
+- [x] **7.1** Attributes management
   - `setForeground(color)`
   - `setBackground(color)`
   - `setStyle(bold?, italic?, underline?)` - null = unchanged
