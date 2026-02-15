@@ -70,7 +70,7 @@ TerminalBuffer.kt - Main class
 
 ## Phase 4: Cursor
 
-- [ ] **4.1** Create `Cursor` data class
+- [x]  *4.1** Create `Cursor` data class
   - column: Int, row: Int (0-indexed)
 
 ## Phase 5: Terminal Buffer Setup
