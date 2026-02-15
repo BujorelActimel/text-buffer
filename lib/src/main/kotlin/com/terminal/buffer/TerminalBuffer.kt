@@ -5,8 +5,8 @@ class TerminalBuffer(
     val height: Int,
     val maxScrollBack: Int,
 ) {
-    private val screen: MutableList<Line> = mutableListOf()
-    private val scrollBack: MutableList<Line> = mutableListOf()
+    private val screen: ArrayDeque<Line> = ArrayDeque()
+    private val scrollBack: ArrayDeque<Line> = ArrayDeque()
     private val cursor: Cursor = Cursor(0, 0)
     private var currentAttributes = CellAttributes()
     val scrollbackSize: Int
@@ -78,5 +78,56 @@ class TerminalBuffer(
 
     fun getCurrentAttributes(): CellAttributes {
         return currentAttributes
+    }
+
+    fun writeChar(char: Char) {
+        screen[cursor.row].setCell(cursor.column, Cell(char, currentAttributes))
+
+        if (cursor.column < width - 1) {
+            moveCursorRight(1)
+            return
+        }
+
+        newLine()
+    }
+
+    fun writeText(text: String) {
+        text.forEach { char -> 
+            when (char) {
+                '\n' -> newLine()
+                '\r' -> cursor.column = 0
+                else -> writeChar(char)
+            }
+        }
+    }
+
+    fun fillLine(row: Int, char: Char) {
+        require(row in 0 until height) { "Row $row out of bounds" }
+        screen[row].fill(Cell(char, currentAttributes))
+    }
+    
+    fun fillLine(row: Int) {
+        require(row in 0 until height) { "Row $row out of bounds" }
+        screen[row].fill(Cell.EMPTY.copy(attributes = currentAttributes))
+    }
+
+    fun newLine() {
+        if (cursor.row == height - 1) { // last line
+            scrollUp()
+        }
+        else {
+            cursor.row++
+        }
+        cursor.column = 0
+    }
+
+    fun scrollUp() {
+        scrollBack.add(screen.removeFirst())
+
+        while (scrollBack.size > maxScrollBack) {
+            scrollBack.removeFirst()
+        }
+
+        screen.add(Line(width))
     }
 }

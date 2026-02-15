@@ -107,23 +107,23 @@ TerminalBuffer.kt - Main class
 
 ## Phase 8: Basic Editing
 
-- [ ] **8.1** Write single character
+- [x] **8.1** Write single character
   - `writeChar(char)` - write at cursor, move right
   - At last col: wrap to next row
   - At last row+col: scroll up, then wrap
 
-- [ ] **8.2** Write text (overwrite)
+- [x] **8.2** Write text (overwrite)
   - `writeText(text)` - uses writeChar()
   - `\n` = cursor to col 0, next row
   - `\r` = cursor to col 0, same row
 
-- [ ] **8.3** Fill line
+- [x] **8.3** Fill line
   - `fillLine(row, char)` - fill with char + current attrs
   - `fillLine(row)` - fill with spaces
 
 ## Phase 9: Line Operations
 
-- [ ] **9.1** Insert line at bottom
+- [x] **9.1** Insert line at bottom
   - `insertLineAtBottom()`
   - Top line → scrollback
   - Trim scrollback if > max
