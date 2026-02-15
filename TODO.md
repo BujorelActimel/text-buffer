@@ -75,23 +75,23 @@ TerminalBuffer.kt - Main class
 
 ## Phase 5: Terminal Buffer Setup
 
-- [ ] **5.1** Create `TerminalBuffer` skeleton
+- [x] **5.1** Create `TerminalBuffer` skeleton
   - Constructor(width, height, maxScrollback)
   - screen: MutableList<Line>
   - scrollback: MutableList<Line>
   - cursor: Cursor
   - currentAttributes: CellAttributes
 
-- [ ] **5.2** Add dimension getters
+- [x] **5.2** Add dimension getters
   - width, height, maxScrollback, scrollbackSize
 
 ## Phase 6: Cursor Operations
 
-- [ ] **6.1** Get/set cursor
+- [x] **6.1** Get/set cursor
   - `getCursor(): Cursor`
   - `setCursor(col, row)` - clamp to bounds
 
-- [ ] **6.2** Cursor movement
+- [x] **6.2** Cursor movement
   - `moveCursorUp(n)`, `moveCursorDown(n)`
   - `moveCursorLeft(n)`, `moveCursorRight(n)`
   - Stop at boundaries
