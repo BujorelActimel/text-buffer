@@ -52,19 +52,19 @@ TerminalBuffer.kt - Main class
 
 ## Phase 3: Line Management
 
-- [ ] **3.1** Create `Line` class
+- [x] **3.1** Create `Line` class
   - Array<Cell> of fixed width
   - Init with empty cells
 
-- [ ] **3.2** Add cell access
+- [x] **3.2** Add cell access
   - `getCell(col)`, `setCell(col, cell)`
   - Bounds checking
 
-- [ ] **3.3** Add string conversion
+- [x] **3.3** Add string conversion
   - `getContent(): String` - raw chars
   - `toString()` - content representation
 
-- [ ] **3.4** Add fill operations
+- [x] **3.4** Add fill operations
   - `fill(char, attributes)`
   - `clear()` - fill with empty
 
