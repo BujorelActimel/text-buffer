@@ -482,4 +482,97 @@ class TerminalBufferTest {
         assertEquals(0, cursor.column)
         assertEquals(0, cursor.row)
     }
+
+    // Insert Text
+    @Test
+    fun `insertText inserts at cursor position`() {
+        val buffer = TerminalBuffer(10, 5, 100)
+        buffer.writeText("ABCDEF")
+        buffer.setCursor(2, 0)
+
+        buffer.insertText("XX")
+
+        assertEquals("ABXXCDEF  ", buffer.getScreenLine(0).getText())
+    }
+
+    @Test
+    fun `insertText moves cursor after inserted text`() {
+        val buffer = TerminalBuffer(10, 5, 100)
+        buffer.setCursor(2, 0)
+        buffer.insertText("XXX")
+
+        assertEquals(5, buffer.getCursor().column)
+        assertEquals(0, buffer.getCursor().row)
+    }
+
+    @Test
+    fun `insertText shifts existing content right`() {
+        val buffer = TerminalBuffer(10, 5, 100)
+        buffer.writeText("Hello")
+        buffer.setCursor(0, 0)
+
+        buffer.insertText("Say ")
+
+        assertEquals("Say Hello ", buffer.getScreenLine(0).getText())
+    }
+
+    @Test
+    fun `insertText discards overflow`() {
+        val buffer = TerminalBuffer(10, 5, 100)
+        buffer.writeText("ABCDEFGHIJ")  // fills line
+        buffer.setCursor(2, 0)
+
+        buffer.insertText("XX")
+
+        // "IJ" should be lost
+        assertEquals("ABXXCDEFGH", buffer.getScreenLine(0).getText())
+    }
+
+    @Test
+    fun `insertText applies current attributes`() {
+        val buffer = TerminalBuffer(10, 5, 100)
+        buffer.writeText("ABC")
+        buffer.setCursor(1, 0)
+        buffer.setForeground(Color.RED)
+
+        buffer.insertText("X")
+
+        val cell = buffer.getScreenLine(0).getCell(1)
+        assertEquals('X', cell.char)
+        assertEquals(Color.RED, cell.attributes.foreground)
+    }
+
+    @Test
+    fun `insertText at end of line`() {
+        val buffer = TerminalBuffer(10, 5, 100)
+        buffer.writeText("ABC")
+        buffer.setCursor(3, 0)
+
+        buffer.insertText("XYZ")
+
+        assertEquals("ABCXYZ    ", buffer.getScreenLine(0).getText())
+        assertEquals(6, buffer.getCursor().column)
+    }
+
+    @Test
+    fun `insertText longer than remaining space`() {
+        val buffer = TerminalBuffer(10, 5, 100)
+        buffer.writeText("ABC")
+        buffer.setCursor(8, 0)
+
+        buffer.insertText("XXXXX")  // only 2 chars fit
+
+        assertEquals("ABC     XX", buffer.getScreenLine(0).getText())
+        assertEquals(9, buffer.getCursor().column)  // clamped to width-1
+    }
+
+    @Test
+    fun `insertText on empty line`() {
+        val buffer = TerminalBuffer(10, 5, 100)
+        buffer.setCursor(3, 0)
+
+        buffer.insertText("Hello")
+
+        assertEquals("   Hello  ", buffer.getScreenLine(0).getText())
+    }
 }
