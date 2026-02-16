@@ -243,8 +243,7 @@ class TerminalBufferTest {
         buffer.writeChar('A')
 
         // Check character was written at (0, 0)
-        val line = buffer.getScreenLine(0)
-        assertEquals('A', line.getCell(0).char)
+        assertEquals('A', buffer.getScreenChar(0, 0))
     }
 
     @Test
@@ -289,12 +288,12 @@ class TerminalBufferTest {
 
         buffer.writeChar('A')
 
-        val cell = buffer.getScreenLine(0).getCell(0)
-        assertEquals('A', cell.char)
-        assertEquals(Color.RED, cell.attributes.foreground)
-        assertEquals(Color.BLUE, cell.attributes.background)
-        assertEquals(true, cell.attributes.styleFlags.bold)
-        assertEquals(true, cell.attributes.styleFlags.underline)
+        assertEquals('A', buffer.getScreenChar(0, 0))
+        val attrs = buffer.getScreenAttributes(0, 0)
+        assertEquals(Color.RED, attrs.foreground)
+        assertEquals(Color.BLUE, attrs.background)
+        assertEquals(true, attrs.styleFlags.bold)
+        assertEquals(true, attrs.styleFlags.underline)
     }
 
     @Test
@@ -302,8 +301,7 @@ class TerminalBufferTest {
         val buffer = TerminalBuffer(10, 5, 100)
         buffer.writeText("Hello")
 
-        val line = buffer.getScreenLine(0)
-        assertEquals("Hello     ", line.getText())
+        assertEquals("Hello     ", buffer.getScreenLine(0))
         assertEquals(5, buffer.getCursor().column)
     }
 
@@ -312,8 +310,8 @@ class TerminalBufferTest {
         val buffer = TerminalBuffer(10, 5, 100)
         buffer.writeText("AB\nCD")
 
-        assertEquals("AB        ", buffer.getScreenLine(0).getText())
-        assertEquals("CD        ", buffer.getScreenLine(1).getText())
+        assertEquals("AB        ", buffer.getScreenLine(0))
+        assertEquals("CD        ", buffer.getScreenLine(1))
         assertEquals(2, buffer.getCursor().column)
         assertEquals(1, buffer.getCursor().row)
     }
@@ -325,7 +323,7 @@ class TerminalBufferTest {
         buffer.writeText("\rXY")
 
         // \r moves to column 0, then XY overwrites AB
-        assertEquals("XYCD      ", buffer.getScreenLine(0).getText())
+        assertEquals("XYCD      ", buffer.getScreenLine(0))
         assertEquals(2, buffer.getCursor().column)
     }
 
@@ -334,8 +332,8 @@ class TerminalBufferTest {
         val buffer = TerminalBuffer(10, 5, 100)
         buffer.writeText("12345678901234")  // 14 chars for width 10
 
-        assertEquals("1234567890", buffer.getScreenLine(0).getText())
-        assertEquals("1234      ", buffer.getScreenLine(1).getText())
+        assertEquals("1234567890", buffer.getScreenLine(0))
+        assertEquals("1234      ", buffer.getScreenLine(1))
         assertEquals(4, buffer.getCursor().column)
         assertEquals(1, buffer.getCursor().row)
     }
@@ -346,11 +344,10 @@ class TerminalBufferTest {
         buffer.setForeground(Color.GREEN)
         buffer.fillLine(2, '-')
 
-        val line = buffer.getScreenLine(2)
-        assertEquals("----------", line.getText())
+        assertEquals("----------", buffer.getScreenLine(2))
 
         // Check attributes on first cell
-        assertEquals(Color.GREEN, line.getCell(0).attributes.foreground)
+        assertEquals(Color.GREEN, buffer.getScreenAttributes(0, 2).foreground)
     }
 
     @Test
@@ -359,7 +356,7 @@ class TerminalBufferTest {
         buffer.writeText("Test")
         buffer.fillLine(0)
 
-        assertEquals("          ", buffer.getScreenLine(0).getText())
+        assertEquals("          ", buffer.getScreenLine(0))
     }
 
     @Test
@@ -388,9 +385,9 @@ class TerminalBufferTest {
         // Top line should be in scrollback
         assertEquals(1, buffer.scrollbackSize)
         // Screen should have Line2, Line3, and new empty line
-        assertEquals("Line2     ", buffer.getScreenLine(0).getText())
-        assertEquals("Line3     ", buffer.getScreenLine(1).getText())
-        assertEquals("          ", buffer.getScreenLine(2).getText())
+        assertEquals("Line2     ", buffer.getScreenLine(0))
+        assertEquals("Line3     ", buffer.getScreenLine(1))
+        assertEquals("          ", buffer.getScreenLine(2))
     }
 
     @Test
@@ -400,7 +397,7 @@ class TerminalBufferTest {
         buffer.scrollUp()
 
         // Last line should be empty
-        assertEquals("          ", buffer.getScreenLine(2).getText())
+        assertEquals("          ", buffer.getScreenLine(2))
     }
 
     @Test
@@ -427,9 +424,9 @@ class TerminalBufferTest {
 
         buffer.clearScreen()
 
-        assertEquals("          ", buffer.getScreenLine(0).getText())
-        assertEquals("          ", buffer.getScreenLine(1).getText())
-        assertEquals("          ", buffer.getScreenLine(2).getText())
+        assertEquals("          ", buffer.getScreenLine(0))
+        assertEquals("          ", buffer.getScreenLine(1))
+        assertEquals("          ", buffer.getScreenLine(2))
     }
 
     @Test
@@ -468,7 +465,7 @@ class TerminalBufferTest {
 
         buffer.clearAll()
 
-        assertEquals("          ", buffer.getScreenLine(0).getText())
+        assertEquals("          ", buffer.getScreenLine(0))
         assertEquals(0, buffer.scrollbackSize)
     }
 
@@ -492,7 +489,7 @@ class TerminalBufferTest {
 
         buffer.insertText("XX")
 
-        assertEquals("ABXXCDEF  ", buffer.getScreenLine(0).getText())
+        assertEquals("ABXXCDEF  ", buffer.getScreenLine(0))
     }
 
     @Test
@@ -513,7 +510,7 @@ class TerminalBufferTest {
 
         buffer.insertText("Say ")
 
-        assertEquals("Say Hello ", buffer.getScreenLine(0).getText())
+        assertEquals("Say Hello ", buffer.getScreenLine(0))
     }
 
     @Test
@@ -525,7 +522,7 @@ class TerminalBufferTest {
         buffer.insertText("XX")
 
         // "IJ" should be lost
-        assertEquals("ABXXCDEFGH", buffer.getScreenLine(0).getText())
+        assertEquals("ABXXCDEFGH", buffer.getScreenLine(0))
     }
 
     @Test
@@ -537,9 +534,8 @@ class TerminalBufferTest {
 
         buffer.insertText("X")
 
-        val cell = buffer.getScreenLine(0).getCell(1)
-        assertEquals('X', cell.char)
-        assertEquals(Color.RED, cell.attributes.foreground)
+        assertEquals('X', buffer.getScreenChar(1, 0))
+        assertEquals(Color.RED, buffer.getScreenAttributes(1, 0).foreground)
     }
 
     @Test
@@ -550,7 +546,7 @@ class TerminalBufferTest {
 
         buffer.insertText("XYZ")
 
-        assertEquals("ABCXYZ    ", buffer.getScreenLine(0).getText())
+        assertEquals("ABCXYZ    ", buffer.getScreenLine(0))
         assertEquals(6, buffer.getCursor().column)
     }
 
@@ -562,7 +558,7 @@ class TerminalBufferTest {
 
         buffer.insertText("XXXXX")  // only 2 chars fit
 
-        assertEquals("ABC     XX", buffer.getScreenLine(0).getText())
+        assertEquals("ABC     XX", buffer.getScreenLine(0))
         assertEquals(9, buffer.getCursor().column)  // clamped to width-1
     }
 
@@ -573,6 +569,120 @@ class TerminalBufferTest {
 
         buffer.insertText("Hello")
 
-        assertEquals("   Hello  ", buffer.getScreenLine(0).getText())
+        assertEquals("   Hello  ", buffer.getScreenLine(0))
+    }
+
+    // Content Access - Screen
+    @Test
+    fun `getScreenChar returns character at position`() {
+        val buffer = TerminalBuffer(10, 5, 100)
+        buffer.writeText("Hello")
+
+        assertEquals('H', buffer.getScreenChar(0, 0))
+        assertEquals('e', buffer.getScreenChar(1, 0))
+        assertEquals('l', buffer.getScreenChar(2, 0))
+    }
+
+    @Test
+    fun `getScreenChar throws on invalid position`() {
+        val buffer = TerminalBuffer(10, 5, 100)
+        assertThrows<IllegalArgumentException> { buffer.getScreenChar(-1, 0) }
+        assertThrows<IllegalArgumentException> { buffer.getScreenChar(10, 0) }
+        assertThrows<IllegalArgumentException> { buffer.getScreenChar(0, -1) }
+        assertThrows<IllegalArgumentException> { buffer.getScreenChar(0, 5) }
+    }
+
+    @Test
+    fun `getScreenAttributes returns attributes at position`() {
+        val buffer = TerminalBuffer(10, 5, 100)
+        buffer.setForeground(Color.RED)
+        buffer.writeText("Hi")
+
+        assertEquals(Color.RED, buffer.getScreenAttributes(0, 0).foreground)
+        assertEquals(Color.RED, buffer.getScreenAttributes(1, 0).foreground)
+    }
+
+    @Test
+    fun `getScreenLine returns line content`() {
+        val buffer = TerminalBuffer(10, 5, 100)
+        buffer.writeText("Hello")
+
+        assertEquals("Hello     ", buffer.getScreenLine(0))
+    }
+
+    @Test
+    fun `getScreenLine throws on invalid row`() {
+        val buffer = TerminalBuffer(10, 5, 100)
+        assertThrows<IllegalArgumentException> { buffer.getScreenLine(-1) }
+        assertThrows<IllegalArgumentException> { buffer.getScreenLine(5) }
+    }
+
+    // Content Access - Scrollback
+    @Test
+    fun `getScrollbackChar returns character from scrollback`() {
+        val buffer = TerminalBuffer(10, 3, 100)
+        buffer.writeText("Line1")
+        buffer.scrollUp()
+
+        assertEquals('L', buffer.getScrollbackChar(0, 0))
+        assertEquals('i', buffer.getScrollbackChar(1, 0))
+    }
+
+    @Test
+    fun `getScrollbackChar throws on empty scrollback`() {
+        val buffer = TerminalBuffer(10, 5, 100)
+        assertThrows<IllegalArgumentException> { buffer.getScrollbackChar(0, 0) }
+    }
+
+    @Test
+    fun `getScrollbackAttributes returns attributes from scrollback`() {
+        val buffer = TerminalBuffer(10, 3, 100)
+        buffer.setForeground(Color.BLUE)
+        buffer.writeText("Test")
+        buffer.scrollUp()
+
+        assertEquals(Color.BLUE, buffer.getScrollbackAttributes(0, 0).foreground)
+    }
+
+    @Test
+    fun `getScrollbackLine returns line from scrollback`() {
+        val buffer = TerminalBuffer(10, 3, 100)
+        buffer.writeText("OldLine")
+        buffer.scrollUp()
+
+        assertEquals("OldLine   ", buffer.getScrollbackLine(0))
+    }
+
+    // Content as string
+    @Test
+    fun `getScreenContent returns all screen lines`() {
+        val buffer = TerminalBuffer(5, 3, 100)
+        buffer.writeText("AB")
+        buffer.setCursor(0, 1)
+        buffer.writeText("CD")
+
+        val content = buffer.getScreenContent()
+        assertEquals("AB   \nCD   \n     ", content)
+    }
+
+    @Test
+    fun `getFullContent returns scrollback and screen`() {
+        val buffer = TerminalBuffer(5, 2, 100)
+        buffer.writeText("Old")
+        buffer.scrollUp()
+        buffer.setCursor(0, 0)
+        buffer.writeText("New")
+
+        val content = buffer.getFullContent()
+        assertEquals("Old  \nNew  \n     ", content)
+    }
+
+    @Test
+    fun `getFullContent with empty scrollback returns screen only`() {
+        val buffer = TerminalBuffer(5, 2, 100)
+        buffer.writeText("Test")
+
+        val content = buffer.getFullContent()
+        assertEquals("Test \n     ", content)
     }
 }

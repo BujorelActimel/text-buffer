@@ -164,8 +164,89 @@ class TerminalBuffer(
         }
     }
 
-    internal fun getScreenLine(row: Int): Line {
-        require(row in 0 until height) { "Row $row out of bounds" }
-        return screen[row]
+    fun getScreenChar(column: Int, row: Int): Char {
+        require(
+            column >= 0 && 
+            column < width &&
+            row >= 0 &&
+            row < height
+        ) {
+            "Line $row Column $column is out of bounds"
+        }
+
+        return screen[row].getCell(column).char
+    }
+
+    fun getScreenAttributes(column: Int, row: Int): CellAttributes {
+        require(
+            column >= 0 && 
+            column < width &&
+            row >= 0 &&
+            row < height
+        ) {
+            "Line $row Column $column is out of bounds"
+        }
+
+        return screen[row].getCell(column).attributes
+    }
+
+    fun getScreenLine(row: Int): String {
+        require(
+            row >= 0 &&
+            row < height
+        ) {
+            "Line $row is out of bounds"
+        }
+
+        return screen[row].getText()
+    }
+
+    fun getScrollbackChar(column: Int, row: Int): Char {
+        require(
+            column >= 0 && 
+            column < width &&
+            row >= 0 &&
+            row < scrollbackSize
+        ) {
+            "Line $row Column $column is out of bounds"
+        }
+
+        return scrollBack[row].getCell(column).char
+
+    }
+
+    fun getScrollbackAttributes(column: Int, row: Int): CellAttributes {
+        require(
+            column >= 0 && 
+            column < width &&
+            row >= 0 &&
+            row < scrollbackSize
+        ) {
+            "Line $row Column $column is out of bounds"
+        }
+
+        return scrollBack[row].getCell(column).attributes
+    }
+
+    fun getScrollbackLine(row: Int): String {
+        require(
+            row >= 0 &&
+            row < scrollbackSize
+        ) {
+            "Line $row is out of bounds"
+        }
+
+        return scrollBack[row].getText()
+    }
+
+    fun getScreenContent(): String {
+        return screen.joinToString("\n") { it.getText() }
+    }
+
+    fun getFullContent(): String {
+        if (scrollBack.isEmpty()) {
+            return getScreenContent()
+        }
+        return scrollBack.joinToString("\n") { it.getText() } + "\n" + getScreenContent()
     }
 }

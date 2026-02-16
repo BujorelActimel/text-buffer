@@ -144,21 +144,21 @@ TerminalBuffer.kt - Main class
 
 ## Phase 11: Content Access
 
-- [ ] **11.1** Screen access
+- [x] **11.1** Screen access
   - `getScreenChar(col, row)`
   - `getScreenAttributes(col, row)`
   - `getScreenLine(row): String`
 
-- [ ] **11.2** Scrollback access
+- [x] **11.2** Scrollback access
   - `getScrollbackChar(col, row)`
   - `getScrollbackAttributes(col, row)`
   - `getScrollbackLine(row): String`
   - Row 0 = oldest, row (size-1) = newest
 
-- [ ] **11.3** Screen content
+- [x] **11.3** Screen content
   - `getScreenContent(): String` - lines joined with \n
 
-- [ ] **11.4** Full content
+- [x] **11.4** Full content
   - `getFullContent(): String` - scrollback + screen
 
 ## Phase 12: Bonus - Wide Characters
