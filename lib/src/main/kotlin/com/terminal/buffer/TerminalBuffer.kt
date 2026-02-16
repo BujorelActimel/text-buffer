@@ -130,4 +130,21 @@ class TerminalBuffer(
 
         screen.add(Line(width))
     }
+
+    fun clearScreen() {
+        screen.forEach { it.clear() }
+        setCursor(0, 0)
+    }
+
+    fun clearAll() {
+        clearScreen()
+        repeat(scrollBack.size) {
+            scrollBack.removeLast()
+        }
+    }
+
+    internal fun getScreenLine(row: Int): Line {
+        require(row in 0 until height) { "Row $row out of bounds" }
+        return screen[row]
+    }
 }

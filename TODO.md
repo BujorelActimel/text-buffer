@@ -124,15 +124,15 @@ TerminalBuffer.kt - Main class
 ## Phase 9: Line Operations
 
 - [x] **9.1** Insert line at bottom
-  - `insertLineAtBottom()`
+  - `scrollUp()`
   - Top line → scrollback
   - Trim scrollback if > max
 
-- [ ] **9.2** Clear screen
+- [x] **9.2** Clear screen
   - `clearScreen()` - all lines empty, cursor to 0,0
   - Scrollback preserved
 
-- [ ] **9.3** Clear all
+- [x] **9.3** Clear all
   - `clearAll()` - screen + scrollback cleared
 
 ## Phase 10: Insert Mode
