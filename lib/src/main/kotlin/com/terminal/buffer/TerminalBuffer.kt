@@ -138,8 +138,29 @@ class TerminalBuffer(
 
     fun clearAll() {
         clearScreen()
-        repeat(scrollBack.size) {
-            scrollBack.removeLast()
+        scrollBack.clear()
+    }
+
+    fun insertText(text: String) {
+        shiftLineRight(cursor.row, cursor.column, text.length)
+
+        val line = screen[cursor.row]
+        for ((i, char) in text.withIndex()) {
+            val col = cursor.column + i
+            if (col < width) {
+                line.setCell(col, Cell(char, currentAttributes))
+            }
+        }
+
+        cursor.column = (cursor.column + text.length).coerceAtMost(width - 1)
+    }
+
+    private fun shiftLineRight(row: Int, column: Int, length: Int) {
+        val line = screen[row]
+        var index = width - 1
+        while (index - length >= column) {
+            line.setCell(index, line.getCell(index - length))
+            index--
         }
     }
 

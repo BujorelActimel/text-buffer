@@ -137,11 +137,10 @@ TerminalBuffer.kt - Main class
 
 ## Phase 10: Insert Mode
 
-- [ ] **10.1** Insert text with wrap
+- [x] **10.1** Insert text with wrap
   - `insertText(text)` - insert at cursor
   - Existing content pushed right
-  - Overflow wraps to next line
-  - May cascade and scroll
+  - Overflow gets lost - standar terminal behaviour
 
 ## Phase 11: Content Access
 
