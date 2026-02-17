@@ -1,35 +1,27 @@
 package com.terminal.buffer
 
-class Line(val width: Int) {
-    private val cells: Array<Cell> = Array(width) { Cell.EMPTY }
+class Line {
+    private val cells = mutableListOf<Cell>()
 
-    fun getCell(column: Int): Cell {
-        require(column >= 0 && column < this.width) {
-            "Position $column is out of the bounds of $this"
-        }
-        return cells[column]
-    }
+    val length: Int get() = cells.size
+
+    fun getCell(column: Int): Cell = cells.getOrElse(column) { Cell.EMPTY }
 
     fun setCell(column: Int, cell: Cell) {
-        require(column >= 0 && column < this.width) {
-            "Position $column is out of the bounds of $this"
-        }
+        while (cells.size <= column) cells.add(Cell.EMPTY)
         cells[column] = cell
     }
 
-    fun fill(cell: Cell) {
-        cells.fill(cell)
+    fun getText(): String = cells.joinToString("") { it.char.toString() }
+
+    fun getTextPadded(width: Int): String {
+        return (0 until width).map { getCell(it).char }.joinToString("")
     }
 
-    fun clear() {
-        fill(Cell.EMPTY)
-    }
+    fun clear() = cells.clear()
 
-    fun getText(): String {
-        return cells.map { it.char }.joinToString("")
-    }
-
-    override fun toString(): String {
-        return "Line { width = $width, text = ${getText()} }"
+    fun fill(cell: Cell, width: Int) {
+        cells.clear()
+        repeat(width) { cells.add(cell) }
     }
 }
