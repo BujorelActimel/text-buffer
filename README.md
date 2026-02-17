@@ -66,12 +66,10 @@ The demo module plays [asciinema](https://asciinema.org/) recordings with a side
 ### Demo Videos
 
 #### asciinema
-<!-- ![Basic playback demo](assets/demo-basic.gif) -->
-*Coming soon*
+![Basic playback demo](assets/asciinema.gif)
 
 #### demo
-<!-- ![Debug view demo](assets/demo-debug.gif) -->
-*Coming soon*
+![Debug view demo](assets/demo.gif)
 
 ## Running Tests
 
