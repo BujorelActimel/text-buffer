@@ -4,3 +4,4 @@ plugins {
 
 rootProject.name = "text-buffer"
 include("lib")
+include("demo")

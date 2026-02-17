@@ -94,7 +94,7 @@ class AnsiCodeHandler(private val buffer: TerminalBuffer) {
     private fun applySGR(codes: List<Int>) {
         var i = 0
         while (i < codes.size) {
-            when (val code = codes[i]) {
+            when (codes[i]) {
                 0 -> buffer.resetAttributes()
 
                 // Bold, italic, underline
